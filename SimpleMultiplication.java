@@ -304,25 +304,26 @@ public class SimpleMultiplication {
         int[][] partial = new int[n][n];
         int[][] carrier = new int[n][n];
 
-        // display header
-        int colWidth = n + 14;
-        String sep   = "    " + "-".repeat(colWidth + 4);
-        System.out.printf("    %" + colWidth + "s%n", arrayToString(multiplicand));
-        System.out.printf("x   %" + colWidth + "s%n", arrayToString(multiplier));
-        System.out.println(sep);
-
         // run the algorithm
         int[] result = simpleMultiply(multiplicand, multiplier, n, partial, carrier);
         updateTotal();
 
-        // step-by-step print only for small n
+        // for small n: show full formatted multiplication layout with steps
+        // for large n: skip display to avoid flooding the console
         if (n <= 10) {
+            int colWidth = n + 14;
+            String sep   = "    " + "-".repeat(colWidth + 4);
+            System.out.printf("    %" + colWidth + "s%n", arrayToString(multiplicand));
+            System.out.printf("x   %" + colWidth + "s%n", arrayToString(multiplier));
+            System.out.println(sep);
             printSteps(partial, carrier, multiplicand, multiplier, n);
+            System.out.println(sep);
+            System.out.printf("    %" + colWidth + "s%n", stripLeadingZeros(result));
+            System.out.println("    " + "=".repeat(colWidth + 4));
+        } else {
+            System.out.println("(Step-by-step output suppressed for n > 10)");
+            System.out.println("Result has " + stripLeadingZeros(result).length() + " digits.");
         }
-
-        System.out.println(sep);
-        System.out.printf("    %" + colWidth + "s%n", stripLeadingZeros(result));
-        System.out.println("    " + "=".repeat(colWidth + 4));
         System.out.println();
 
         System.out.println("Primitive operation count for n=" + n + ":");
@@ -333,7 +334,7 @@ public class SimpleMultiplication {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("SimpleMultiplicationDataset.csv"))) {
 
-            writer.write("n,TotalOperators,Assignments,ArrayLookups,Comparisons,Arithmetic,MethodCalls,Returns\n");
+            writer.write("n,TotalOps,Assignments,ArrayLookups,Comparisons,Arithmetic,MethodCalls,Returns\n");
 
             for (int digitCount = 1; digitCount <= n; digitCount++) {
                 int[] num1              = generateRandomNumber(rand, digitCount);

@@ -256,21 +256,24 @@ public class SimpleMultiplication {
     }
 
     // prints step-by-step partial products and carriers matching the assignment PDF format
-    // each row pair is shifted left by its row index to show positional value
-    // the last carrier row gets a "+" prefix
+    // partial[row] has trailing spaces = row  (shifts left by row positions)
+    // carrier[row] has trailing spaces = row+1 (same position as next partial row)
+    // last carrier has trailing spaces = n, gets "+" prefix, no partial after it
     private static void printSteps(int[][] partial, int[][] carrier,
                                    int[] multiplicand, int[] multiplier, int n) {
         int colWidth = n + 14;
 
         for (int row = 0; row < n; row++) {
             int mDigit = multiplier[n - 1 - row];  // multiplier digit for this row
-            // row 0 = rightmost (no shift), row 1 = 1 space left, etc.
-            String shift = " ".repeat(row);
-            String partialStr = arrayToString(partial[row]) + shift;
-            String carrierStr = arrayToString(carrier[row]) + shift;
+
+            // partial[row] trailing spaces = row
+            String partialStr = arrayToString(partial[row]) + " ".repeat(row);
+
+            // carrier[row] trailing spaces = row+1 (aligns with next partial row)
+            String carrierStr = arrayToString(carrier[row]) + " ".repeat(row + 1);
 
             // partial products row
-            System.out.printf("    %" + colWidth + "s   partial products for (=%s x %d)%n",
+            System.out.printf("    %" + colWidth + "s   partial products for (%s x %d)%n",
                     partialStr, arrayToString(multiplicand), mDigit);
 
             // carrier row - last one gets "+" prefix
@@ -308,8 +311,8 @@ public class SimpleMultiplication {
         int[] result = simpleMultiply(multiplicand, multiplier, n, partial, carrier);
         updateTotal();
 
-        // for small n: show full formatted multiplication layout with steps
-        // for large n: skip display to avoid flooding the console
+        // for small n: show full formatted layout with step-by-step partial products and carriers
+        // for large n: show result only to avoid flooding the console
         if (n <= 10) {
             int colWidth = n + 14;
             String sep   = "    " + "-".repeat(colWidth + 4);
@@ -321,8 +324,7 @@ public class SimpleMultiplication {
             System.out.printf("    %" + colWidth + "s%n", stripLeadingZeros(result));
             System.out.println("    " + "=".repeat(colWidth + 4));
         } else {
-            System.out.println("(Step-by-step output suppressed for n > 10)");
-            System.out.println("Result has " + stripLeadingZeros(result).length() + " digits.");
+            System.out.println("Result: " + stripLeadingZeros(result));
         }
         System.out.println();
 

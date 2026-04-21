@@ -19,11 +19,11 @@ public class SimpleMultiplication {
     // both arrays must have the same length n
     // partialOut and carrierOut are filled so main() can use them for printing
     // returns the result as a digit array of length 2n
-    public static int[] simpleMultiply(int[] multiplicand, int[] multiplier, int n,
+    public static int[] longMultiplication(int[] multiplicand, int[] multiplier, int n,
                                         int[][] partialOut, int[][] carrierOut) {
 
         // counting the call to this method itself
-        methodCallCounter++;        // simpleMultiply(...)
+        methodCallCounter++;        // longMultiplication(...)
 
         // reset all counters for this call
         assignmentCounter   = 0;
@@ -303,24 +303,24 @@ public class SimpleMultiplication {
         System.out.println("Multiplier  : " + arrayToString(multiplier));
         System.out.println();
 
-        // arrays passed into simpleMultiply to receive partial and carrier for printing
+        // arrays passed into longMultiplication to receive partial and carrier for printing
         int[][] partial = new int[n][n];
         int[][] carrier = new int[n][n];
 
         // run the algorithm
-        int[] result = simpleMultiply(multiplicand, multiplier, n, partial, carrier);
+        int[] result = longMultiplication(multiplicand, multiplier, n, partial, carrier);
         updateTotal();
 
         // for small n: show full formatted layout with step-by-step partial products and carriers
         // for large n: show result only to avoid flooding the console
         if (n <= 10) {
             int colWidth = n + 14;
-            String sep   = "    " + "-".repeat(colWidth + 4);
+            String separatorLine   = "    " + "-".repeat(colWidth + 4);
             System.out.printf("    %" + colWidth + "s%n", arrayToString(multiplicand));
             System.out.printf("x   %" + colWidth + "s%n", arrayToString(multiplier));
-            System.out.println(sep);
+            System.out.println(separatorLine);
             printSteps(partial, carrier, multiplicand, multiplier, n);
-            System.out.println(sep);
+            System.out.println(separatorLine);
             System.out.printf("    %" + colWidth + "s%n", stripLeadingZeros(result));
             System.out.println("    " + "=".repeat(colWidth + 4));
         } else {
@@ -344,7 +344,7 @@ public class SimpleMultiplication {
                 int[][] partialStorage  = new int[digitCount][digitCount];
                 int[][] carrierStorage  = new int[digitCount][digitCount];
 
-                simpleMultiply(num1, num2, digitCount, partialStorage, carrierStorage);
+                longMultiplication(num1, num2, digitCount, partialStorage, carrierStorage);
                 updateTotal();
 
                 writer.write(digitCount + "," + totalCounter + "," + assignmentCounter + ","

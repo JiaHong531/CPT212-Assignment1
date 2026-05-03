@@ -1,4 +1,4 @@
-n,TotalOps,Assignments,ArrayLookups,Comparisons,Arithmetic,MethodCalls,Returns
+Number of digits (n),Total Primitive Operations,Assignments,ArrayLookups,Comparisons,Arithmetic,MethodCalls,Returns
 1,82,27,13,15,25,1,1
 2,249,77,54,37,79,1,1
 3,507,154,120,67,163,1,1

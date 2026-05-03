@@ -305,7 +305,7 @@ public class SimpleMultiplication {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("SimpleMultiplicationDataset.csv"))) {
 
-            writer.write("n,TotalOps,Assignments,ArrayLookups,Comparisons,Arithmetic,MethodCalls,Returns\n");
+            writer.write("Number of digits (n),Total Primitive Operations,Assignments,ArrayLookups,Comparisons,Arithmetic,MethodCalls,Returns\n");
 
             for (int digitCount = 1; digitCount <= n; digitCount++) {
 

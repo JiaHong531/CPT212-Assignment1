@@ -26,7 +26,7 @@ public class SimpleMultiplication {
         arrayLookupCounter = 0;
         comparisonCounter = 0;
         arithmeticCounter = 0;
-        methodCallCounter = 1; // preserve the method call count above
+        methodCallCounter = 1; // Preserve the method call count above
         returnCounter = 0;
 
         int[][] partial = new int[n][n]; // Allocate a new 2D array for the partial product digits 

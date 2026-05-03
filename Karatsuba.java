@@ -129,10 +129,10 @@ class Karatsuba {
     {
 
         Random rand = new Random();
-        int MAX_N = 100;
+        int MAX_N = 10000;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("KaratsubaDataset.csv"))) {
-            writer.write("n,TotalOps,Assignments,Comparisons,Additions,Subtractions,Multiplications,Divisions,Modulos,MethodCalls,Returns\n");
+            writer.write("Number of digits (n),Total Primitive Operations,Assignments,Comparisons,Additions,Subtractions,Multiplications,Divisions,Modulos,MethodCalls,Returns\n"");
 
             for (int n = 1; n <= MAX_N; n++) {
 
@@ -161,10 +161,12 @@ class Karatsuba {
                         subtractionCounter + multiplicationCounter + divisionCounter +
                         moduloCounter + methodCallCounter + returnCounter;
 
-                // Clean output: only n, Expected and Actual
+                // Clean output: only n, Expected, Actual and Total Operations
                 System.out.println("n = " + n);
-                System.out.println("Expected : " + expectedProduct);
-                System.out.println("Actual   : " + actualProduct);
+                System.out.println("Multiplicand : " + x);
+                System.out.println("Multiplier   : " + y);
+                System.out.println("Expected     : " + expectedProduct);
+                System.out.println("Actual       : " + actualProduct);
                 System.out.println("Total Operations : " + totalCounter);
                 System.out.println();
 

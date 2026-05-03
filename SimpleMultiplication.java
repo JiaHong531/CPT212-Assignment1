@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class SimpleMultiplication {
 
-    // counters based on textbook primitive operation categories
+    // counters based on primitive operation categories
     static long assignmentCounter = 0;
     static long arrayLookupCounter = 0;
     static long comparisonCounter = 0;
@@ -15,11 +15,6 @@ public class SimpleMultiplication {
     static long returnCounter = 0;
     static long totalCounter = 0;
 
-    // multiplies two n-digit numbers given as digit arrays (most-significant digit
-    // first)
-    // both arrays must have the same length n
-    // partialOut and carrierOut are filled so main() can use them for printing
-    // returns the result as a digit array of length 2n
     public static int[] longMultiplication(int[] multiplicand, int[] multiplier, int n,
             int[][] partialOut, int[][] carrierOut) {
 
@@ -34,54 +29,41 @@ public class SimpleMultiplication {
         methodCallCounter = 1; // preserve the method call count above
         returnCounter = 0;
 
-        // partial[row][col] - unit digit of each pairwise product
-        // carrier[row][col] - tens digit of each pairwise product
-        // row = n-1-i, so row 0 corresponds to the rightmost multiplier digit
-        int[][] partial = new int[n][n];
-        int[][] carrier = new int[n][n];
+        int[][] partial = new int[n][n]; // Allocate a new 2D array for the partial product digits 
+        int[][] carrier = new int[n][n]; // Allocate a new 2D array for the carrier digits
         assignmentCounter += 2; // int[][] partial = ..., int[][] carrier = ...
 
-        // accumulator - size 2n, each cell may temporarily exceed 9 before
-        // normalization
-        // position index from the left:
-        // partial[row][j] -> acc[n + j - row]
-        // carrier[row][j] -> acc[n + j - row - 1]
-        int[] acc = new int[2 * n];
+        int[] acc = new int[2 * n]; // Allocate a 1D array of size 2n to accumulate the final sum 
         assignmentCounter++; // int[] acc = ...
         arithmeticCounter++; // 2 * n
 
-        // ----------------------------------------------------------------
-        // Step 1 - digit by digit multiplication
-        // i walks the multiplier from right to left (n-1 down to 0)
-        // ----------------------------------------------------------------
-
         // for (int i = n-1; i >= 0; i--)
-        assignmentCounter++; // i = n-1 (init)
-        arithmeticCounter++; // n-1 (arithmetic in init)
-        comparisonCounter++; // i >= 0 (first check)
+        assignmentCounter++; // i = n-1
+        arithmeticCounter++; // n-1
+        comparisonCounter++; // i >= 0
         for (int i = n - 1; i >= 0; i--) {
 
-            int row = n - 1 - i;
+            int row = n - 1 - i; // Calculate which row of the partial/carrier table we are filling
             arithmeticCounter++; // n-1-i
             assignmentCounter++; // row =
 
             // for (int j = n-1; j >= 0; j--)
-            assignmentCounter++; // j = n-1 (init)
-            arithmeticCounter++; // n-1 (arithmetic in init)
-            comparisonCounter++; // j >= 0 (first check)
+            assignmentCounter++; // j = n-1
+            arithmeticCounter++; // n-1 
+            comparisonCounter++; // j >= 0
             for (int j = n - 1; j >= 0; j--) {
 
-                int product = multiplier[i] * multiplicand[j];
+                int product = multiplier[i] * multiplicand[j]; // Multiply the multiplier by the multiplicand 
                 arrayLookupCounter += 2; // multiplier[i], multiplicand[j]
                 arithmeticCounter++; // * (multiplication)
                 assignmentCounter++; // product =
 
-                partial[row][j] = product % 10;
+                partial[row][j] = product % 10; // Store the ones-place digit of the product in the partial array
                 arrayLookupCounter++; // partial[row][j]
                 arithmeticCounter++; // % 10
                 assignmentCounter++; // partial[row][j] =
 
-                carrier[row][j] = product / 10;
+                carrier[row][j] = product / 10; // Store the tens-place digit of the product in the carrier array
                 arrayLookupCounter++; // carrier[row][j]
                 arithmeticCounter++; // / 10
                 assignmentCounter++; // carrier[row][j] =
@@ -92,18 +74,17 @@ public class SimpleMultiplication {
                 comparisonCounter++; // j >= 0 re-check (covers final failing check)
             }
 
-            // add partial[row] into acc - partial[row][j] goes to acc[n + j - row]
             // for (int j = n-1; j >= 0; j--)
-            assignmentCounter++; // j = n-1 (init)
-            arithmeticCounter++; // n-1 (arithmetic in init)
-            comparisonCounter++; // j >= 0 (first check)
+            assignmentCounter++; // j = n-1
+            arithmeticCounter++; // n-1
+            comparisonCounter++; // j >= 0
             for (int j = n - 1; j >= 0; j--) {
 
-                int pos = n + j - row;
+                int pos = n + j - row; // Calculate the position in the 1D accumulator
                 arithmeticCounter += 2; // n+j, then -row
                 assignmentCounter++; // pos =
 
-                acc[pos] += partial[row][j];
+                acc[pos] += partial[row][j]; // Add the partial digit in the accumulator
                 arrayLookupCounter += 2; // acc[pos], partial[row][j]
                 arithmeticCounter++; // +=
                 assignmentCounter++; // acc[pos] =
@@ -111,21 +92,20 @@ public class SimpleMultiplication {
                 // j--
                 arithmeticCounter++;
                 assignmentCounter++;
-                comparisonCounter++; // j >= 0 re-check
+                comparisonCounter++; // j >= 0
             }
 
-            // add carrier[row] into acc - carrier[row][j] goes to acc[n + j - row - 1]
             // for (int j = n-1; j >= 0; j--)
-            assignmentCounter++; // j = n-1 (init)
-            arithmeticCounter++; // n-1 (arithmetic in init)
-            comparisonCounter++; // j >= 0 (first check)
+            assignmentCounter++; // j = n-1
+            arithmeticCounter++; // n-1
+            comparisonCounter++; // j >= 0
             for (int j = n - 1; j >= 0; j--) {
 
-                int pos = n + j - row - 1;
+                int pos = n + j - row - 1; // Calculate position for carrier
                 arithmeticCounter += 3; // n+j, -row, -1
                 assignmentCounter++; // pos =
 
-                acc[pos] += carrier[row][j];
+                acc[pos] += carrier[row][j]; // Add the carrier digit in the accumulator
                 arrayLookupCounter += 2; // acc[pos], carrier[row][j]
                 arithmeticCounter++; // +=
                 assignmentCounter++; // acc[pos] =
@@ -133,35 +113,30 @@ public class SimpleMultiplication {
                 // j--
                 arithmeticCounter++;
                 assignmentCounter++;
-                comparisonCounter++; // j >= 0 re-check
+                comparisonCounter++; // j >= 0
             }
 
             // i-- : 1 arithmetic + 1 assignment, then re-check
             arithmeticCounter++;
             assignmentCounter++;
-            comparisonCounter++; // i >= 0 re-check
+            comparisonCounter++; // i >= 0
         }
 
-        // ----------------------------------------------------------------
-        // Step 3 - normalize: propagate carry rightward through acc
-        // walk right to left, push tens digit of each cell to the left neighbor
-        // ----------------------------------------------------------------
-
         // for (int k = 2n-1; k >= 1; k--)
-        assignmentCounter++; // k = 2n-1 (init)
-        arithmeticCounter += 2; // 2*n, then -1 (in 2n-1)
-        comparisonCounter++; // k >= 1 (first check)
+        assignmentCounter++; // k = 2n-1
+        arithmeticCounter += 2; // 2*n, then -1
+        comparisonCounter++; // k >= 1
         for (int k = 2 * n - 1; k >= 1; k--) {
 
             arrayLookupCounter++; // acc[k]
             comparisonCounter++; // acc[k] >= 10
-            if (acc[k] >= 10) {
-                acc[k - 1] += acc[k] / 10;
+            if (acc[k] >= 10) { // Check if acc[k] contains a value >= 10
+                acc[k - 1] += acc[k] / 10; // Take the tens-digit and add it to the neighbor on the left
                 arrayLookupCounter += 2; // acc[k-1], acc[k]
                 arithmeticCounter += 3; // k-1, /10, +=
                 assignmentCounter++; // acc[k-1] =
 
-                acc[k] = acc[k] % 10;
+                acc[k] = acc[k] % 10; // Keep only the ones-digit at the current position
                 arrayLookupCounter++; // acc[k]
                 arithmeticCounter++; // % 10
                 assignmentCounter++; // acc[k] =
@@ -170,23 +145,22 @@ public class SimpleMultiplication {
             // k-- : 1 arithmetic + 1 assignment, then re-check
             arithmeticCounter++;
             assignmentCounter++;
-            comparisonCounter++; // k >= 1 re-check
+            comparisonCounter++; // k >= 1
         }
 
-        // copy partial and carrier to output arrays so main() can print steps
         // for (int i = 0; i < n; i++)
-        assignmentCounter++; // i = 0 (init)
-        comparisonCounter++; // i < n (first check)
+        assignmentCounter++; // i = 0
+        comparisonCounter++; // i < n
         for (int i = 0; i < n; i++) {
             // for (int j = 0; j < n; j++)
-            assignmentCounter++; // j = 0 (init)
-            comparisonCounter++; // j < n (first check)
+            assignmentCounter++; // j = 0
+            comparisonCounter++; // j < n
             for (int j = 0; j < n; j++) {
-                partialOut[i][j] = partial[i][j];
+                partialOut[i][j] = partial[i][j]; // Transfer local partial results to the partialOut array
                 arrayLookupCounter += 2; // partialOut[i][j], partial[i][j]
                 assignmentCounter++;
 
-                carrierOut[i][j] = carrier[i][j];
+                carrierOut[i][j] = carrier[i][j]; // Transfer local carrier results to the carrierOut array
                 arrayLookupCounter += 2; // carrierOut[i][j], carrier[i][j]
                 assignmentCounter++;
 
@@ -201,11 +175,11 @@ public class SimpleMultiplication {
             comparisonCounter++;
         }
 
-        returnCounter++; // return acc
-        return acc;
+        returnCounter++; 
+        return acc; // Return acc
     }
 
-    // converts a digit array to a plain string - not part of the algorithm
+    // Converts a digit array to a plain string
     private static String arrayToString(int[] digits) {
         char[] chars = new char[digits.length];
         for (int i = 0; i < digits.length; i++) {
@@ -214,15 +188,14 @@ public class SimpleMultiplication {
         return new String(chars);
     }
 
-    // strips leading zeros for clean display
+    // Strips leading zeros for clean display
     private static String stripLeadingZeros(int[] digits) {
-        // find where the actual digits start (skip leading zeros)
-        int start = 0;
+        int start = 0; // find where the actual digits start
         while (start < digits.length - 1 && digits[start] == 0) {
             start++;
         }
 
-        // copy the meaningful digits into a char array
+        // Copy the meaningful digits into a char array
         char[] chars = new char[digits.length - start];
         for (int i = 0; i < chars.length; i++) {
             chars[i] = (char) ('0' + digits[start + i]);
@@ -230,23 +203,23 @@ public class SimpleMultiplication {
         return new String(chars);
     }
 
-    // generates a random n-digit number as a digit array (no leading zeros)
+    // Generates a random n-digit number as a digit array
     private static int[] generateRandomNumber(Random rand, int n) {
         int[] digits = new int[n];
-        digits[0] = rand.nextInt(9) + 1; // first digit: 1 to 9
+        digits[0] = rand.nextInt(9) + 1; // first digit from 1 to 9
         for (int i = 1; i < n; i++) {
-            digits[i] = rand.nextInt(10); // remaining: 0 to 9
+            digits[i] = rand.nextInt(10); // remaining from 0 to 9
         }
         return digits;
     }
 
-    // sums all individual counters into totalCounter
+    // Sums all individual counters into totalCounter
     private static void updateTotal() {
         totalCounter = assignmentCounter + arrayLookupCounter + comparisonCounter
                 + arithmeticCounter + methodCallCounter + returnCounter;
     }
 
-    // prints the full operation count breakdown
+    // Prints the full operation's counters 
     private static void printCounters() {
         System.out.println("Total primitive operations : " + totalCounter);
         System.out.println("  assignments   = " + assignmentCounter);
@@ -257,35 +230,30 @@ public class SimpleMultiplication {
         System.out.println("  returns       = " + returnCounter);
     }
 
-    // prints step-by-step partial products and carriers matching the assignment PDF
-    // format
-    // partial[row] has trailing spaces = row (shifts left by row positions)
-    // carrier[row] has trailing spaces = row+1 (same position as next partial row)
-    // last carrier has trailing spaces = n, gets "+" prefix, no partial after it
+    // Prints step-by-step partial products and carriers
     private static void printSteps(int[][] partial, int[][] carrier,
             int[] multiplicand, int[] multiplier, int n) {
         int colWidth = n + 14;
 
         for (int row = 0; row < n; row++) {
-            int mDigit = multiplier[n - 1 - row]; // multiplier digit for this row
+            int mDigit = multiplier[n - 1 - row]; // Identify the specific digit from the multiplier
 
-            // partial[row] trailing spaces = row
+            // Create string of partial digits and add spaces
             String partialStr = arrayToString(partial[row]) + " ".repeat(row);
 
-            // carrier[row] trailing spaces = row+1 (aligns with next partial row)
+            // Create string of carrier digits and shift alignment
             String carrierStr = arrayToString(carrier[row]) + " ".repeat(row + 1);
 
-            // partial products row
+            // Print partial products 
             System.out.printf("    %" + colWidth + "s   partial products for (%s x %d)%n",
                     partialStr, arrayToString(multiplicand), mDigit);
 
-            // carrier row - last one gets "+" prefix
             if (row == n - 1) {
                 System.out.printf("+   %" + colWidth + "s   carriers for (%s x %d)%n",
-                        carrierStr, arrayToString(multiplicand), mDigit);
+                        carrierStr, arrayToString(multiplicand), mDigit); // Add a "+" symbol at last row
             } else {
                 System.out.printf("    %" + colWidth + "s   carriers for (%s x %d)%n",
-                        carrierStr, arrayToString(multiplicand), mDigit);
+                        carrierStr, arrayToString(multiplicand), mDigit); // Print carrier line without "+" symbol
             }
         }
     }
@@ -306,18 +274,14 @@ public class SimpleMultiplication {
         System.out.println("Multiplier  : " + arrayToString(multiplier));
         System.out.println();
 
-        // arrays passed into longMultiplication to receive partial and carrier for
-        // printing
         int[][] partial = new int[n][n];
         int[][] carrier = new int[n][n];
 
-        // run the algorithm
+        // Run the simple multiplication
         int[] result = longMultiplication(multiplicand, multiplier, n, partial, carrier);
         updateTotal();
 
-        // for small n: show full formatted layout with step-by-step partial products
-        // and carriers
-        // for large n: show result only to avoid flooding the console
+        // Display a step-by-step long multiplication tables when n is less than or equal to 10
         if (n <= 10) {
             int colWidth = n + 14;
             String separatorLine = "    " + "-".repeat(colWidth + 4);
@@ -329,14 +293,14 @@ public class SimpleMultiplication {
             System.out.printf("    %" + colWidth + "s%n", stripLeadingZeros(result));
             System.out.println("    " + "=".repeat(colWidth + 4));
         } else {
-            System.out.println("Result: " + stripLeadingZeros(result));
+            System.out.println("Result: " + stripLeadingZeros(result)); // Print the result for large n
         }
         System.out.println();
 
         System.out.println("Primitive operation count for n=" + n + ":");
         printCounters();
 
-        // performance sweep: n=1 to user's n, write to CSV
+        // Perform performance sweep from n=1 to user's input n and write it into CSV
         System.out.println("\nRunning performance sweep n=1 to " + n + "...");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("SimpleMultiplicationDataset.csv"))) {
@@ -345,7 +309,7 @@ public class SimpleMultiplication {
 
             for (int digitCount = 1; digitCount <= n; digitCount++) {
 
-                // determine number of runs based on n
+                // Determine number of runs based on n
                 int runs;
                 if (digitCount <= 50)
                     runs = 100;
@@ -356,7 +320,7 @@ public class SimpleMultiplication {
                 else
                     runs = 3;
 
-                // accumulators for averaging
+                // Accumulators for averaging
                 long sumTotal = 0, sumAssign = 0, sumArray = 0;
                 long sumCmp = 0, sumArith = 0, sumMethod = 0, sumReturn = 0;
 
@@ -378,7 +342,7 @@ public class SimpleMultiplication {
                     sumReturn += returnCounter;
                 }
 
-                // write averaged values
+                // Write averaged values
                 writer.write(digitCount + ","
                         + (sumTotal / runs) + ","
                         + (sumAssign / runs) + ","
